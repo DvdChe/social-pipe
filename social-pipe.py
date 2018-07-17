@@ -19,7 +19,9 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
-#Send stdin to twitter :
-for line in sys.stdin:
-    api.update_status(line)
+ContestTweet = api.search(q='concours', lang='fr', tweet_mode='extended')
+
+for tweet in ContestTweet:
+    print(tweet)
+    break
 
