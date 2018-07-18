@@ -1,7 +1,8 @@
 import tweepy
 import sys 
 import configparser
-
+import json
+import re
 
 #Parsing conf file:
 conf = configparser.ConfigParser()
@@ -19,9 +20,27 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
-ContestTweet = api.search(q='concours', lang='fr', tweet_mode='extended')
+ContestTweet = tweepy.Cursor(
+        api.search,q='concours', 
+        lang='fr',
+        tweet_mode='extended'
+        ).items(5)
 
 for tweet in ContestTweet:
-    print(tweet)
-    break
+    
+    if hasattr(tweet, 'retweeted_status'):
+        
+        TweetText = tweet.retweeted_status.full_text
+        TweetId   = tweet.retweeted_status.id
+        print('----------------------')
+        #print(TweetText)
+        
+        #Let's find if there is suckers to follow: 
+        if re.search('follow',TweetText,re.IGNORECASE):
+            accounts=re.findall(r'[@]\w+',TweetText)
+            for account in accounts:
+                print('I will have to follow', account)
 
+        #print('Have to retweet ID', TweetId)
+        
+    print('----------------------')
