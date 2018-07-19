@@ -2,15 +2,30 @@ import tweepy
 import configparser
 import json
 import re
+import csv
 
 from os import path, remove
 
-
+#Avoiding multiple executions
 PathFlag = '/tmp/social-pipe.flag'
 if path.isfile(PathFlag):
     exit(1)    
     
 open(PathFlag, 'a')
+
+#with open('retweeted.csv',a) as retweeted_csvfile:
+#    reader = retweeted_csv.reader(retweeted_csvfile, 
+#                                  delimiter=',', 
+#                                  quotechar='|')
+#
+#    writer = retweeted_csv.writerow(retweeted_csvfile, 
+#                                    delimiter=',', 
+#                                    quotechar='|',
+#                                    quoting=csv.QUOTE_MINIMAL)
+
+
+
+
 
 #Parsing conf file:
 conf = configparser.ConfigParser()
@@ -28,12 +43,14 @@ auth.set_access_token(access_token, access_token_secret)
 
 api = tweepy.API(auth)
 
+#Lets search Contest tweet
 ContestTweet = tweepy.Cursor(
         api.search,q='concours', 
         lang='fr',
         tweet_mode='extended'
         ).items(5)
 
+#Parsing the tweet to know what to do.
 for tweet in ContestTweet:
     
     if hasattr(tweet, 'retweeted_status'):
@@ -49,12 +66,11 @@ for tweet in ContestTweet:
             for account in accounts:
                 print('I will have to follow', account)
 
-        
+        #If It need to retweet 
         if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
             print("I must retweet ",TweetId)
             print(TweetText)
 
-       ## #print('Have to retweet ID', TweetId)
         
     print('----------------------')
 
