@@ -4,6 +4,15 @@ import configparser
 import json
 import re
 
+from os import path, remove
+
+
+PathFlag = '/tmp/social-pipe.flag'
+if path.isfile(PathFlag):
+    exit(1)    
+    
+open(PathFlag, 'a')
+
 #Parsing conf file:
 conf = configparser.ConfigParser()
 conf.read ('auth.conf')
@@ -42,8 +51,12 @@ for tweet in ContestTweet:
                 print('I will have to follow', account)
 
         
-        if re.search('rt',TweetText,re.IGNORECASE) or :re.search('retweet',TweetText,re.IGNORECASE)
-           print('I will have to follow', account)
-        #print('Have to retweet ID', TweetId)
+        if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
+            print("I must retweet ",TweetId)
+            print(TweetText)
+
+       ## #print('Have to retweet ID', TweetId)
         
     print('----------------------')
+
+remove(PathFlag)
