@@ -41,6 +41,9 @@ for tweet in ContestTweet:
             for account in accounts:
                 print('I will have to follow', account)
 
+        
+        if re.search('rt',TweetText,re.IGNORECASE) or :re.search('retweet',TweetText,re.IGNORECASE)
+           print('I will have to follow', account)
         #print('Have to retweet ID', TweetId)
         
     print('----------------------')
