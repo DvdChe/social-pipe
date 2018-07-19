@@ -1,5 +1,4 @@
 import tweepy
-import sys 
 import configparser
 import json
 import re
