@@ -60,6 +60,8 @@ followed  = []
 
 for tweet in ContestTweet:
 
+    # If it's a retweet :
+    # ===================
 
     if hasattr(tweet, 'retweeted_status'):
 
@@ -83,11 +85,14 @@ for tweet in ContestTweet:
             # If It needs to retweet
             # ======================
 
-            if re.search('rt',TweetText,re.IGNORECASE) or
-            re.search('retweet',TweetText,re.IGNORECASE):
+            if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
                 print("I must retweet ",TweetId)
                 print(TweetText)
                 retweeted.append(str(TweetId))
+
+
+        else:
+            print("doublon !")
 
 
             print('----------------------')
