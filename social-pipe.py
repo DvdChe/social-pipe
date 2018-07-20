@@ -2,20 +2,25 @@ import tweepy
 import configparser
 import json
 import re
-import csv
-import codecs
+import pickle
 
 from os import path, remove
+
 ###############################################################################
+
+# General config
+# ==============
+
+FlagFile = '/tmp/social-pipe.flag'
+HistoryFile = 'retweeted.bin'
 
 # Avoiding multiple executions
 # ============================
 
-PathFlag = '/tmp/social-pipe.flag'
-if path.isfile(PathFlag):
+if path.isfile(FlagFile):
     exit(1)
 
-open(PathFlag, 'a')
+open(FlagFile, 'a')
 
 ###############################################################################
 
@@ -55,18 +60,20 @@ ContestTweet = tweepy.Cursor(
 # Parsing the tweet to know what to do.
 # ====================================
 
-retweeted = []
-followed  = []
+tRetweeted = []
+tFollowed  = []
 
 for tweet in ContestTweet:
 
+    # If it's a retweet :
+    # ===================
 
     if hasattr(tweet, 'retweeted_status'):
 
         TweetText = tweet.retweeted_status.full_text
         TweetId   = tweet.retweeted_status.id
 
-        if TweetId not in retweeted:
+        if TweetId not in tRetweeted:
 
             print('----------------------')
 
@@ -78,27 +85,28 @@ for tweet in ContestTweet:
 
                 for account in accounts:
                     print('I will have to follow', account)
-                    followed.append(account)
+                    tFollowed.append(account)
 
             # If It needs to retweet
             # ======================
 
-            if re.search('rt',TweetText,re.IGNORECASE) or
-            re.search('retweet',TweetText,re.IGNORECASE):
+            if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
                 print("I must retweet ",TweetId)
                 print(TweetText)
-                retweeted.append(str(TweetId))
+                tRetweeted.append(str(TweetId))
 
+        else:
+
+            print("doublon !")
 
             print('----------------------')
 
-print(retweeted)
+print(tRetweeted)
 
-#with open('retweeted.csv','a') as retweeted_csvfile:
-#    writer = csv.writer(retweeted_csvfile,
-#                        delimiter=',',
-#                        quotechar='|',
-#                        quoting=csv.QUOTE_MINIMAL)
-#    writer.writerow([followed,retweeted])
+fp = open(HistoryFile, 'wb')
+pickle.dump(tRetweeted,fp)
+fp.close()
 
-remove(PathFlag)
+
+
+remove(FlagFile)
