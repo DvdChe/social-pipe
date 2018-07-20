@@ -99,6 +99,10 @@ for tweet in ContestTweet:
 
             print("doublon !")
 
+        else:
+            print("doublon !")
+
+
             print('----------------------')
 
 print(tRetweeted)
