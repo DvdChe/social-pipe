@@ -2,8 +2,8 @@ import tweepy
 import configparser
 import json
 import re
-import pickle
 
+from pickle import dump, load
 from os import path, remove
 
 ###############################################################################
@@ -95,22 +95,12 @@ for tweet in ContestTweet:
                 print(TweetText)
                 tRetweeted.append(str(TweetId))
 
-        else:
-
-            print("doublon !")
-
-        else:
-            print("doublon !")
-
-
             print('----------------------')
 
 print(tRetweeted)
 
 fp = open(HistoryFile, 'wb')
-pickle.dump(tRetweeted,fp)
+dump(tRetweeted,fp)
 fp.close()
-
-
 
 remove(FlagFile)
