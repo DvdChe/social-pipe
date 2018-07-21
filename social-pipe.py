@@ -2,8 +2,8 @@ import tweepy
 import configparser
 import json
 import re
+import pickle
 
-from pickle import dump, load
 from os import path, remove
 
 ###############################################################################
@@ -11,16 +11,19 @@ from os import path, remove
 # General config
 # ==============
 
-FlagFile = '/tmp/social-pipe.flag'
-HistoryFile = 'retweeted.bin'
+FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
+RetweetedHistoryFile = 'retweeted.bin'         # Previously retweeted
+FollowedHistoryFile  = 'followed.bin'          # Previously followed
+NFetchTweet          = 5                       # Number of loaded tweets
 
 # Avoiding multiple executions
 # ============================
 
-if path.isfile(FlagFile):
-    exit(1)
-
-open(FlagFile, 'a')
+#if path.isfile(FlagFile):
+#    print("Error : ", FlagFile,"exists. Is Social pip is already running ?")
+#    exit(1)
+#
+#open(FlagFile, 'a')
 
 ###############################################################################
 
@@ -53,15 +56,26 @@ ContestTweet = tweepy.Cursor(
         api.search,q='concours',
         lang='fr',
         tweet_mode='extended'
-        ).items(50)
+        ).items(NFetchTweet)
+
+ ##############################################################################
+
+ # Lets load allready retweeded stuffs
+ # ==================================
+
+if path.isfile(RetweetedHistoryFile):
+    f = open(RetweetedHistoryFile, 'rb')
+    tRetweeted = pickle.load(f)
+
+else:
+    tRetweeted = []
+
+tFollowed  = []
 
 ###############################################################################
 
 # Parsing the tweet to know what to do.
 # ====================================
-
-tRetweeted = []
-tFollowed  = []
 
 for tweet in ContestTweet:
 
@@ -73,7 +87,7 @@ for tweet in ContestTweet:
         TweetText = tweet.retweeted_status.full_text
         TweetId   = tweet.retweeted_status.id
 
-        if TweetId not in tRetweeted:
+        if str(TweetId) not in tRetweeted:
 
             print('----------------------')
 
@@ -81,7 +95,7 @@ for tweet in ContestTweet:
             # =========================================
 
             if re.search('follow',TweetText,re.IGNORECASE):
-                accounts=re.findall(r'[@]\w+',TweetText)
+                accounts = re.findall(r'[@]\w+',TweetText)
 
                 for account in accounts:
                     print('I will have to follow', account)
@@ -99,8 +113,8 @@ for tweet in ContestTweet:
 
 print(tRetweeted)
 
-fp = open(HistoryFile, 'wb')
-dump(tRetweeted,fp)
+fp = open(RetweetedHistoryFile, 'wb')
+pickle.dump(tRetweeted,fp)
 fp.close()
 
-remove(FlagFile)
+#remove(FlagFile)
