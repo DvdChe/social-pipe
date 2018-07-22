@@ -13,7 +13,7 @@ from os import path, remove
 FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
 RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'         # Previously retweeted
 FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'          # Previously followed
-NFetchTweet          = 50                      # Number of loaded tweets
+NFetchTweet          = 1                      # Number of loaded tweets
 Log                  = ''
 
 # Avoiding multiple executions
