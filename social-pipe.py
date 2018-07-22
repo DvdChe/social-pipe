@@ -11,8 +11,8 @@ from os import path, remove
 # ==============
 
 FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
-RetweetedHistoryFile = 'retweeted.bin'         # Previously retweeted
-FollowedHistoryFile  = 'followed.bin'          # Previously followed
+RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'         # Previously retweeted
+FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'          # Previously followed
 NFetchTweet          = 50                      # Number of loaded tweets
 Log                  = ''
 
@@ -63,14 +63,14 @@ ContestTweet = tweepy.Cursor(
  # Lets load allready retweeded stuffs
  # ==================================
 
-if path.isfile(RetweetedHistoryFile):
+if path.isfile(str(RetweetedHistoryFile)):
     f = open(RetweetedHistoryFile, 'rb')
     tRetweeted = pickle.load(f)
 
 else:
     tRetweeted = []
 
-if path.isfile(FollowedHistoryFile):
+if path.isfile(str(FollowedHistoryFile)):
     f = open(FollowedHistoryFile, 'rb')
     tFollowed = pickle.load(f)
 
@@ -131,11 +131,11 @@ for tweet in ContestTweet:
 
 print(tRetweeted)
 print(tFollowed)
-fp = open(RetweetedHistoryFile, 'wb')
+fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted,fp)
 fp.close()
 
-fp = open(FollowedHistoryFile, 'wb')
+fp = open(str(FollowedHistoryFile), 'wb')
 pickle.dump(tFollowed,fp)
 fp.close()
 
