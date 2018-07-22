@@ -20,11 +20,11 @@ Log                  = ''
 # Avoiding multiple executions
 # ============================
 
-#if path.isfile(FlagFile):
-#    print("Error : ", FlagFile,"exists. Is Social pip is already running ?")
-#    exit(1)
-#
-#open(FlagFile, 'a')
+if path.isfile(FlagFile):
+    print("Error : ", FlagFile,"exists. Is Social pip is already running ?")
+    exit(1)
+
+open(FlagFile, 'a')
 
 ###############################################################################
 
@@ -158,5 +158,5 @@ pickle.dump(tFollowed,fp)
 fp.close()
 
 #print(Log)
-#remove(FlagFile)
+remove(FlagFile)
 #print(type(Log))
