@@ -14,7 +14,7 @@ FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exe
 RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin' # Previously retweeted
 FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'  # Previously followed
 AuthConfFile         = path.dirname(path.abspath(__file__))+'/auth.conf'     # auth conf
-NFetchTweet          = 1                      # Number of loaded tweets
+NFetchTweet          = 5                                                     # Number of loaded tweets
 Log                  = ''
 
 # Avoiding multiple executions
@@ -31,7 +31,7 @@ Log                  = ''
 # Parsing conf file:
 # ==================
 conf = configparser.ConfigParser()
-conf.read (str(AuthConfFile))
+conf.read (str(AuthConfFile)    )
 
 consumer_key        = conf['AUTH']['ConsumerKey']
 consumer_secret     = conf['AUTH']['ConsumerSecret']
