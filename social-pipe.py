@@ -1,6 +1,5 @@
 import tweepy
 import configparser
-import json
 import re
 import pickle
 
@@ -14,7 +13,8 @@ from os import path, remove
 FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
 RetweetedHistoryFile = 'retweeted.bin'         # Previously retweeted
 FollowedHistoryFile  = 'followed.bin'          # Previously followed
-NFetchTweet          = 5                       # Number of loaded tweets
+NFetchTweet          = 1                       # Number of loaded tweets
+Log                  = ''
 
 # Avoiding multiple executions
 # ============================
@@ -70,7 +70,12 @@ if path.isfile(RetweetedHistoryFile):
 else:
     tRetweeted = []
 
-tFollowed  = []
+if path.isfile(FollowedHistoryFile):
+    f = open(FollowedHistoryFile, 'rb')
+    tFollowed = pickle.load(f)
+
+else:
+    tFollowed = []
 
 ###############################################################################
 
@@ -86,10 +91,10 @@ for tweet in ContestTweet:
 
         TweetText = tweet.retweeted_status.full_text
         TweetId   = tweet.retweeted_status.id
+        Author = tweet.retweeted_status.user.id_str
+        AuthorScrenName = tweet.retweeted_status.user.id_str
 
         if str(TweetId) not in tRetweeted:
-
-            print('----------------------')
 
             # Let's find if there is suckers to follow:
             # =========================================
@@ -97,24 +102,36 @@ for tweet in ContestTweet:
             if re.search('follow',TweetText,re.IGNORECASE):
                 accounts = re.findall(r'[@]\w+',TweetText)
 
+                Log += 'Following now : '
+
                 for account in accounts:
                     print('I will have to follow', account)
+                    #api.create_friendship(account)
                     tFollowed.append(account)
+                    #Log += account,','
 
+            if Author not in tFollowed:
+                #api.create_friendship(Author)
+                tFollowed.append(Author)
+                #Log += 'Following Author :',str(AuthorScrenName)
+                print(type(AuthorScrenName))
             # If It needs to retweet
             # ======================
 
             if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
-                print("I must retweet ",TweetId)
-                print(TweetText)
+                #api.retweet(TweetId)
                 tRetweeted.append(str(TweetId))
 
-            print('----------------------')
 
-print(tRetweeted)
 
 fp = open(RetweetedHistoryFile, 'wb')
 pickle.dump(tRetweeted,fp)
 fp.close()
 
+fp = open(FollowedHistoryFile, 'wb')
+pickle.dump(tFollowed,fp)
+fp.close()
+
+print(Log)
 #remove(FlagFile)
+print(type(Log))
