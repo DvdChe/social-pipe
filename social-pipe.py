@@ -13,7 +13,7 @@ from os import path, remove
 FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
 RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin' # Previously retweeted
 FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'  # Previously followed
-AuthConfFile         = path.dirname(path.abspath(__file__))+'/auth.conf'     # auth conf
+AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'     # auth conf
 NFetchTweet          = 50                                                     # Number of loaded tweets
 Log                  = ''
 
@@ -37,6 +37,14 @@ consumer_key        = conf['AUTH']['ConsumerKey']
 consumer_secret     = conf['AUTH']['ConsumerSecret']
 access_token        = conf['AUTH']['AccessToken']
 access_token_secret = conf['AUTH']['AccessTokenSecret']
+
+DryRunConf          = conf['OPTIONS']['DryRun']
+
+if DryRunConf == 'True':
+    DryRun = True
+
+else:
+    print("its wet")
 
 ###############################################################################
 
@@ -103,17 +111,24 @@ for tweet in ContestTweet:
             if re.search('follow',TweetText,re.IGNORECASE):
                 ScreenNames = re.findall(r'[@]\w+',TweetText)
 
+                print(ScreenNames)
+
                 #Log += 'Following now : '
 
                 for ScreenName in ScreenNames:
-                    print('I will have to follow', ScreenName)
+
                     user=(api.get_user(screen_name = ScreenName))
-                    api.create_friendship(user.id)
+                    print('I will have to follow', ScreenName,'/',user.id)
+
+                    if not DryRun:
+                        api.create_friendship(user.id)
+
                     tFollowed.append(user.id)
                     #Log += account,','
 
             if Author not in tFollowed:
-                api.create_friendship(Author)
+                if not DryRun:
+                    api.create_friendship(Author)
                 tFollowed.append(Author)
                 #Log += 'Following Author :',str(AuthorScrenName)
                 #print(type(AuthorScrenName))
@@ -125,14 +140,15 @@ for tweet in ContestTweet:
                 if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
 
                     try:
-                        api.retweet(TweetId)
+                        if not DryRun:
+                            api.retweet(TweetId)
                     except:
                         pass
 
                     tRetweeted.append(str(TweetId))
 
-print(tRetweeted)
-print(tFollowed)
+#print(tRetweeted)
+#print(tFollowed)
 fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted,fp)
 fp.close()

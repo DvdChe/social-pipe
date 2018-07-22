@@ -1,4 +1,4 @@
-auth.conf
+*.conf
 *.swp
 *.csv
 *.bin
