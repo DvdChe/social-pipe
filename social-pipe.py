@@ -44,7 +44,7 @@ if DryRunConf == 'True':
     DryRun = True
 
 else:
-    print("its wet")
+    DryRun = False
 
 ###############################################################################
 
