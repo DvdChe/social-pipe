@@ -116,7 +116,7 @@ for tweet in ContestTweet:
                 api.create_friendship(Author)
                 tFollowed.append(Author)
                 #Log += 'Following Author :',str(AuthorScrenName)
-                print(type(AuthorScrenName))
+                #print(type(AuthorScrenName))
 
             # If It needs to retweet
             # ======================
