@@ -101,14 +101,15 @@ for tweet in ContestTweet:
             # =========================================
 
             if re.search('follow',TweetText,re.IGNORECASE):
-                accounts = re.findall(r'[@]\w+',TweetText)
+                ScreenNames = re.findall(r'[@]\w+',TweetText)
 
                 #Log += 'Following now : '
 
-                for account in accounts:
-                    print('I will have to follow', account)
-                    #api.create_friendship(account)
-                    tFollowed.append(account)
+                for ScreenName in ScreenNames:
+                    print('I will have to follow', ScreenName)
+                    user=(api.get_user(screen_name = ScreenName))
+                    api.create_friendship(user.id)
+                    tFollowed.append(user.id)
                     #Log += account,','
 
             if Author not in tFollowed:
