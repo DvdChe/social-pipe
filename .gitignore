@@ -2,3 +2,6 @@ auth.conf
 *.swp
 *.csv
 *.bin
+bin/
+lib/
+pip-selfcheck.json
