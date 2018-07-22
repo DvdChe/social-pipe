@@ -13,7 +13,7 @@ from os import path, remove
 FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
 RetweetedHistoryFile = 'retweeted.bin'         # Previously retweeted
 FollowedHistoryFile  = 'followed.bin'          # Previously followed
-NFetchTweet          = 1                       # Number of loaded tweets
+NFetchTweet          = 50                      # Number of loaded tweets
 Log                  = ''
 
 # Avoiding multiple executions
@@ -102,7 +102,7 @@ for tweet in ContestTweet:
             if re.search('follow',TweetText,re.IGNORECASE):
                 accounts = re.findall(r'[@]\w+',TweetText)
 
-                Log += 'Following now : '
+                #Log += 'Following now : '
 
                 for account in accounts:
                     print('I will have to follow', account)
@@ -111,19 +111,26 @@ for tweet in ContestTweet:
                     #Log += account,','
 
             if Author not in tFollowed:
-                #api.create_friendship(Author)
+                api.create_friendship(Author)
                 tFollowed.append(Author)
                 #Log += 'Following Author :',str(AuthorScrenName)
                 print(type(AuthorScrenName))
+
             # If It needs to retweet
             # ======================
+            if TweetId not in tRetweeted :
 
-            if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
-                #api.retweet(TweetId)
-                tRetweeted.append(str(TweetId))
+                if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
 
+                    try:
+                        api.retweet(TweetId)
+                    except:
+                        pass
 
+                    tRetweeted.append(str(TweetId))
 
+print(tRetweeted)
+print(tFollowed)
 fp = open(RetweetedHistoryFile, 'wb')
 pickle.dump(tRetweeted,fp)
 fp.close()
@@ -132,6 +139,6 @@ fp = open(FollowedHistoryFile, 'wb')
 pickle.dump(tFollowed,fp)
 fp.close()
 
-print(Log)
+#print(Log)
 #remove(FlagFile)
-print(type(Log))
+#print(type(Log))
