@@ -170,7 +170,7 @@ for tweet in ContestTweet:
                 # If it needs to be liked
                 # =======================
 
-                if re.search('fav',TweetText,re.IGNORECASE):
+                if re.search('fav',TweetText,re.IGNORECASE) or re.search('like',TweetText,re.IGNORECASE):
 
                     api.create_favorite(TweetId)
                     print('Favorited : ', TweetId)
