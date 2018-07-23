@@ -161,6 +161,6 @@ fp.close()
 
 StopTime = datetime.datetime.now()
 
-print('============ Social-Pipe Stopped @ ",StopTime,' ============')
+print('============ Social-Pipe Stopped @ ',StopTime,' ============')
 
 remove(FlagFile)
