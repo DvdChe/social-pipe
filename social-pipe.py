@@ -126,8 +126,8 @@ for tweet in ContestTweet:
                             api.create_friendship(user.id)
                             tFollowed.append(user.id)
 
-                        except:
-                            pass
+                    except:
+                        pass
 
                 print('Followed :',ScreenNames)
 
