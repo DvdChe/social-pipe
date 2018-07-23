@@ -2,6 +2,7 @@ import tweepy
 import configparser
 import re
 import pickle
+import datetime
 
 from os import path, remove
 
@@ -10,11 +11,11 @@ from os import path, remove
 # General config
 # ==============
 
-FlagFile             = '/tmp/social-pipe.flag' # Flag file to avoid multiple exec
-RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin' # Previously retweeted
-FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'  # Previously followed
-AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'     # auth conf
-NFetchTweet          = 50                                                     # Number of loaded tweets
+FlagFile             = '/tmp/social-pipe.flag'
+RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'
+FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'
+AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'
+NFetchTweet          = 50
 Log                  = ''
 
 # Avoiding multiple executions
@@ -23,6 +24,9 @@ Log                  = ''
 if path.isfile(FlagFile):
     print("Error : ", FlagFile,"exists. Is Social pip is already running ?")
     exit(1)
+
+StartTime = datetime.datetime.now()
+print('============ Starting Social-Pipe @' ,StartTime,' ============')
 
 open(FlagFile, 'a')
 
@@ -98,9 +102,9 @@ for tweet in ContestTweet:
 
     if hasattr(tweet, 'retweeted_status'):
 
-        TweetText = tweet.retweeted_status.full_text
-        TweetId   = tweet.retweeted_status.id
-        Author = tweet.retweeted_status.user.id_str
+        TweetText       = tweet.retweeted_status.full_text
+        TweetId         = tweet.retweeted_status.id
+        Author          = tweet.retweeted_status.user.id_str
         AuthorScrenName = tweet.retweeted_status.user.id_str
 
         if str(TweetId) not in tRetweeted:
@@ -111,20 +115,18 @@ for tweet in ContestTweet:
             if re.search('follow',TweetText,re.IGNORECASE):
                 ScreenNames = re.findall(r'[@]\w+',TweetText)
 
-                print(ScreenNames)
-
                 #Log += 'Following now : '
 
                 for ScreenName in ScreenNames:
 
-                    user=(api.get_user(screen_name = ScreenName))
-                    print('I will have to follow', ScreenName,'/',user.id)
+                    user = api.get_user(screen_name = ScreenName)
 
                     if not DryRun:
                         api.create_friendship(user.id)
 
                     tFollowed.append(user.id)
-                    #Log += account,','
+
+                print('Followed :',ScreenNames)
 
             if Author not in tFollowed:
                 if not DryRun:
@@ -142,13 +144,13 @@ for tweet in ContestTweet:
                     try:
                         if not DryRun:
                             api.retweet(TweetId)
+                            print('Retweeted :', TweetId)
                     except:
                         pass
 
                     tRetweeted.append(str(TweetId))
 
-#print(tRetweeted)
-#print(tFollowed)
+
 fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted,fp)
 fp.close()
@@ -157,6 +159,8 @@ fp = open(str(FollowedHistoryFile), 'wb')
 pickle.dump(tFollowed,fp)
 fp.close()
 
-#print(Log)
+StopTime = datetime.datetime.now()
+
+print('============ Social-Pipe Stopped @ ",StopTime,' ============')
+
 remove(FlagFile)
-#print(type(Log))

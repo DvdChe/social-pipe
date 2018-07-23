@@ -1,6 +1,7 @@
 altgraph==0.15
 certifi==2018.4.16
 chardet==3.0.4
+DateTime==4.2
 future==0.16.0
 idna==2.7
 macholib==1.9
@@ -8,8 +9,10 @@ oauthlib==2.1.0
 pefile==2017.11.5
 PyInstaller==3.3.1
 PySocks==1.6.8
+pytz==2018.5
 requests==2.19.1
 requests-oauthlib==1.0.0
 six==1.11.0
 tweepy==3.6.0
 urllib3==1.23
+zope.interface==4.5.0
