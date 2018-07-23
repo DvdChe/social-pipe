@@ -172,8 +172,12 @@ for tweet in ContestTweet:
 
                 if re.search('fav',TweetText,re.IGNORECASE) or re.search('like',TweetText,re.IGNORECASE):
 
-                    api.create_favorite(TweetId)
-                    print('Favorited : ', TweetId)
+                    try:
+                        if not DryRun:
+                            api.create_favorite(TweetId)
+                            print('Favorited : ', TweetId)
+                    except:
+                        pass
 
 
 fp = open(str(RetweetedHistoryFile), 'wb')
