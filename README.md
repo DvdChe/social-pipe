@@ -1,8 +1,12 @@
 # Social Pipe. A bot to win lot of useless shits.
 
+## DISCLAIMER 
+
+Twitter doesn't really like bots, so use this program at your own risks. I recommend you to create a specific account to use it.
+
 ## WTF ?
 
-Few times ago, i saw an blog article talking about a guy who tried to make a twitter bot, designed to find contests on twitter and participate to it. I tried to reproduce this idea on my own way. It's mainly an opportunity for me to make something on python.
+Few times ago, i saw a blog article talking about a guy who tried to make a twitter bot, designed to find contests on twitter and participate to it. I tried to reproduce this idea on my own way. It's mainly an opportunity for me to make something on python.
 
 ## WTF are theses contests ?
 
@@ -10,15 +14,15 @@ You know, the stupid contest which consists to like, retweet and follow in order
 
 ## Install
 
-This program is developped in Python 3.6. I would highly recommand you to user virtualenv or pew to make it works, cause it has many dependencies to setup.
+This program is developped in Python 3.6. I would highly recommand you to use virtualenv or pew to make it works, cause it has many dependencies.
 
 ### Requirements :
 
-    - Python 3.6 or 3.5 ?
-    - Virtualenv or pew.
-    - Twitter API tokens. 
-      - To get tokens, go here : https://developer.twitter.com. 
-      - More informations here : https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
+- Python 3.6 or maybe 3.5
+- Virtualenv or pew.
+- Twitter API tokens. 
+  - To get tokens, go here : https://developer.twitter.com. 
+  - More informations here : https://developer.twitter.com/en/docs/basics/authentication/guides/access-tokens.html
    
 
 ### Prepare your env :
@@ -84,10 +88,10 @@ ContestTweet = tweepy.Cursor(
         ).items(NFetchTweet)
 ```
 
-As you can see, this program use Tweepy lib.
+As you can see, this program uses Tweepy lib.
 With the search method, you can add more criteria such geolocation. Relevant if you're an US guy or an Australian, for instance.
 
-You will also have to locate theses blocs :
+You will also have to locate theses blocks :
 
 ```python
 
@@ -112,4 +116,8 @@ if re.search('fav',TweetText,re.IGNORECASE):
 
 Of Course, if you have more stuff to tune, you can open an issue or try to do it by yourself =)
 
+Enjoy !!!!
 
+Oh, one more thing : 
+
+DON'T BLAME ME IF YOU ARE BANNED BY TWITTER !!!!!!
