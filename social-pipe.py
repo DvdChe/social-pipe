@@ -119,12 +119,15 @@ for tweet in ContestTweet:
 
                 for ScreenName in ScreenNames:
 
-                    user = api.get_user(screen_name = ScreenName)
+                    try:
+                        user = api.get_user(screen_name = ScreenName)
 
-                    if not DryRun:
-                        api.create_friendship(user.id)
+                        if not DryRun:
+                            api.create_friendship(user.id)
+                            tFollowed.append(user.id)
 
-                    tFollowed.append(user.id)
+                        except:
+                            pass
 
                 print('Followed :',ScreenNames)
 
@@ -132,8 +135,6 @@ for tweet in ContestTweet:
                 if not DryRun:
                     api.create_friendship(Author)
                 tFollowed.append(Author)
-                #Log += 'Following Author :',str(AuthorScrenName)
-                #print(type(AuthorScrenName))
 
             # If It needs to retweet
             # ======================
