@@ -46,6 +46,7 @@ DryRunConf          = conf['OPTIONS']['DryRun']
 
 if DryRunConf == 'True':
     DryRun = True
+    print('This is a dry run. Nothing will happens.')
 
 else:
     DryRun = False
@@ -150,6 +151,14 @@ for tweet in ContestTweet:
                         pass
 
                     tRetweeted.append(str(TweetId))
+
+                # If it needs to be liked
+                # =======================
+
+                if re.search('fav',TweetText,re.IGNORECASE):
+
+                    api.create_favorite(TweetId)
+                    print('Favorited : ', TweetId)
 
 
 fp = open(str(RetweetedHistoryFile), 'wb')
