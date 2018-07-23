@@ -30,7 +30,7 @@ FlagFile             = '/tmp/social-pipe.flag'
 RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'
 FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'
 AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'
-NFetchTweet          = 150
+NFetchTweet          = 300
 Log                  = ''
 
 # Avoiding multiple executions
