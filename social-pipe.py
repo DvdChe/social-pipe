@@ -30,7 +30,7 @@ FlagFile             = '/tmp/social-pipe.flag'
 RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'
 FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'
 AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'
-NFetchTweet          = 1000
+NFetchTweet          = 50
 Log                  = ''
 
 # Avoiding multiple executions
@@ -82,7 +82,7 @@ api = tweepy.API(auth)
 # =========================
 
 ContestTweet = tweepy.Cursor(
-        api.search,q='concours',
+        api.search, q='concours',
         lang='fr',
         tweet_mode='extended'
         ).items(NFetchTweet)
@@ -128,8 +128,8 @@ for tweet in ContestTweet:
             # Let's find if there is suckers to follow:
             # =========================================
 
-            if re.search('follow',TweetText,re.IGNORECASE):
-                ScreenNames = re.findall(r'[@]\w+',TweetText)
+            if re.search('follow', TweetText, re.IGNORECASE):
+                ScreenNames = re.findall(r'[@]\w+', TweetText)
 
                 #Log += 'Following now : '
 
@@ -145,7 +145,7 @@ for tweet in ContestTweet:
                     except:
                         pass
 
-                print('Followed :',ScreenNames)
+                print('Followed :', ScreenNames)
 
             if Author not in tFollowed:
                 if not DryRun:
@@ -154,9 +154,9 @@ for tweet in ContestTweet:
 
             # If It needs to retweet
             # ======================
-            if TweetId not in tRetweeted :
+            if TweetId not in tRetweeted:
 
-                if re.search('rt',TweetText,re.IGNORECASE) or re.search('retweet',TweetText,re.IGNORECASE):
+                if re.search('rt', TweetText, re.IGNORECASE) or re.search('retweet', TweetText, re.IGNORECASE):
 
                     try:
                         if not DryRun:
@@ -170,7 +170,7 @@ for tweet in ContestTweet:
                 # If it needs to be liked
                 # =======================
 
-                if re.search('fav',TweetText,re.IGNORECASE) or re.search('like',TweetText,re.IGNORECASE):
+                if re.search('fav', TweetText, re.IGNORECASE) or re.search('like', TweetText, re.IGNORECASE):
 
                     try:
                         if not DryRun:
@@ -181,15 +181,15 @@ for tweet in ContestTweet:
 
 
 fp = open(str(RetweetedHistoryFile), 'wb')
-pickle.dump(tRetweeted,fp)
+pickle.dump(tRetweeted, fp)
 fp.close()
 
 fp = open(str(FollowedHistoryFile), 'wb')
-pickle.dump(tFollowed,fp)
+pickle.dump(tFollowed, fp)
 fp.close()
 
 StopTime = datetime.datetime.now()
 
-print('============ Social-Pipe Stopped @ ',StopTime,' ============')
+print('============ Social-Pipe Stopped @ ', StopTime, ' ============')
 
 remove(FlagFile)
