@@ -11,3 +11,9 @@ AccessTokenSecret = And Guess what ? This is the access token secret here !
 # It allows you to run it to make tests and see if it works correctly.
 # Possible values : True / False.
 DryRun = True
+
+
+# Determine how many tweets will be analysed in the research
+FetchTweet = 5
+
+
