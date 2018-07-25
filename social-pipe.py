@@ -30,7 +30,6 @@ FlagFile             = '/tmp/social-pipe.flag'
 RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'
 FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'
 AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'
-NFetchTweet          = 50
 Log                  = ''
 
 # Avoiding multiple executions
@@ -58,6 +57,7 @@ access_token        = conf['AUTH']['AccessToken']
 access_token_secret = conf['AUTH']['AccessTokenSecret']
 
 DryRunConf          = conf['OPTIONS']['DryRun']
+NFetchTweet         = int(conf['OPTIONS']['FetchTweet'])
 
 if DryRunConf == 'True':
     DryRun = True
