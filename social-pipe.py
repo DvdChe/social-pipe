@@ -194,9 +194,9 @@ for tweet in ContestTweet:
                             retweet = api.retweet(TweetId)
                             print('Retweeted :', TweetId)
 
-                            if re.search(RegTag, TweetText):
-                                Pidgin = random.choice(tFollowers)
-                                api.update_status(Pidgin, retweet.id)
+                            #if re.search(RegTag, TweetText):
+                            #    Pidgin = random.choice(tFollowers)
+                            #    api.update_status(Pidgin, retweet.id)
 
                     except:
                         pass
