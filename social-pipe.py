@@ -18,6 +18,7 @@ import configparser
 import re
 import pickle
 import datetime
+import random
 
 from os import path, remove
 
@@ -26,21 +27,24 @@ from os import path, remove
 # General config
 # ==============
 
-FlagFile             = '/tmp/social-pipe.flag'
-RetweetedHistoryFile = path.dirname(path.abspath(__file__))+'/retweeted.bin'
-FollowedHistoryFile  = path.dirname(path.abspath(__file__))+'/followed.bin'
-AuthConfFile         = path.dirname(path.abspath(__file__))+'/social-pipe.conf'
-Log                  = ''
+CurrentLocation = str(path.dirname(path.abspath(__file__)))
+
+FlagFile = str('/tmp/social-pipe.flag')
+RetweetedHistoryFile = CurrentLocation+'/retweeted.bin'
+FollowedHistoryFile = CurrentLocation+'/followed.bin'
+FollowerNameFile = CurrentLocation+'/followers.bin'
+AuthConfFile = CurrentLocation+'/social-pipe.conf'
+Log = str('')
 
 # Avoiding multiple executions
 # ============================
 
 if path.isfile(FlagFile):
-    print("Error : ", FlagFile,"exists. Is Social pip is already running ?")
+    print("Error : ", FlagFile, "exists. Is Social pip is already running ?")
     exit(1)
 
 StartTime = datetime.datetime.now()
-print('============ Starting Social-Pipe @' ,StartTime,' ============')
+print('============ Starting Social-Pipe @', StartTime, ' ============')
 
 open(FlagFile, 'a')
 
@@ -49,15 +53,16 @@ open(FlagFile, 'a')
 # Parsing conf file:
 # ==================
 conf = configparser.ConfigParser()
-conf.read (str(AuthConfFile)    )
+conf.read(str(AuthConfFile))
 
-consumer_key        = conf['AUTH']['ConsumerKey']
-consumer_secret     = conf['AUTH']['ConsumerSecret']
-access_token        = conf['AUTH']['AccessToken']
-access_token_secret = conf['AUTH']['AccessTokenSecret']
+consumer_key = str(conf['AUTH']['ConsumerKey'])
+consumer_secret = str(conf['AUTH']['ConsumerSecret'])
+access_token = str(conf['AUTH']['AccessToken'])
+access_token_secret = str(conf['AUTH']['AccessTokenSecret'])
 
-DryRunConf          = conf['OPTIONS']['DryRun']
-NFetchTweet         = int(conf['OPTIONS']['FetchTweet'])
+DryRunConf = str(conf['OPTIONS']['DryRun'])
+NFetchTweet = int(conf['OPTIONS']['FetchTweet'])
+OwnScreenName = str(conf['OPTIONS']['ScreenName'])
 
 if DryRunConf == 'True':
     DryRun = True
@@ -78,6 +83,31 @@ api = tweepy.API(auth)
 
 ###############################################################################
 
+# Get list of follewers :
+# ======================
+
+tFollowers = []
+
+if not path.isfile(FollowerNameFile):
+
+    print('No followers list file found. Generating... It may take a while')
+
+    followers = tweepy.Cursor(api.followers_ids,
+                              screen_name=OwnScreenName).items()
+
+    for follower in followers:
+        UserObj = api.get_user(user_id=follower)
+        tFollowers.append('@'+UserObj.screen_name)
+
+    fp = open(str(FollowerNameFile), 'wb')
+    pickle.dump(tFollowers, fp)
+    fp.close()
+
+f = open(FollowerNameFile, 'rb')
+tFollowers = pickle.load(f)
+
+###############################################################################
+
 # Lets search Contest tweet
 # =========================
 
@@ -87,10 +117,10 @@ ContestTweet = tweepy.Cursor(
         tweet_mode='extended'
         ).items(NFetchTweet)
 
- ##############################################################################
+##############################################################################
 
- # Lets load allready retweeded stuffs
- # ==================================
+# Lets load allready retweeded stuffs
+# ==================================
 
 if path.isfile(str(RetweetedHistoryFile)):
     f = open(RetweetedHistoryFile, 'rb')
@@ -118,9 +148,9 @@ for tweet in ContestTweet:
 
     if hasattr(tweet, 'retweeted_status'):
 
-        TweetText       = tweet.retweeted_status.full_text
-        TweetId         = tweet.retweeted_status.id
-        Author          = tweet.retweeted_status.user.id_str
+        TweetText = tweet.retweeted_status.full_text
+        TweetId = tweet.retweeted_status.id
+        Author = tweet.retweeted_status.user.id_str
         AuthorScrenName = tweet.retweeted_status.user.id_str
 
         if str(TweetId) not in tRetweeted:
@@ -131,12 +161,10 @@ for tweet in ContestTweet:
             if re.search('follow', TweetText, re.IGNORECASE):
                 ScreenNames = re.findall(r'[@]\w+', TweetText)
 
-                #Log += 'Following now : '
-
                 for ScreenName in ScreenNames:
 
                     try:
-                        user = api.get_user(screen_name = ScreenName)
+                        user = api.get_user(screen_name=ScreenName)
 
                         if not DryRun:
                             api.create_friendship(user.id)
@@ -150,18 +178,26 @@ for tweet in ContestTweet:
             if Author not in tFollowed:
                 if not DryRun:
                     api.create_friendship(Author)
+
                 tFollowed.append(Author)
 
             # If It needs to retweet
             # ======================
             if TweetId not in tRetweeted:
 
-                if re.search('rt', TweetText, re.IGNORECASE) or re.search('retweet', TweetText, re.IGNORECASE):
+                RegTweet = re.compile('rt|retweet', re.IGNORECASE)
+                RegTag = re.compile('tag|cite|mention', re.IGNORECASE)
 
+                if re.search(RegTweet, TweetText):
                     try:
                         if not DryRun:
-                            api.retweet(TweetId)
+                            retweet = api.retweet(TweetId)
                             print('Retweeted :', TweetId)
+
+                            if re.search(RegTag, TweetText):
+                                Pidgin = random.choice(tFollowers)
+                                api.update_status(Pidgin, retweet.id)
+
                     except:
                         pass
 
@@ -169,9 +205,8 @@ for tweet in ContestTweet:
 
                 # If it needs to be liked
                 # =======================
-
-                if re.search('fav', TweetText, re.IGNORECASE) or re.search('like', TweetText, re.IGNORECASE):
-
+                RegFav = re.compile('fav|like', re.IGNORECASE)
+                if re.search(RegFav, TweetText):
                     try:
                         if not DryRun:
                             api.create_favorite(TweetId)
