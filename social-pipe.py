@@ -170,10 +170,10 @@ for tweet in ContestTweet:
                             api.create_friendship(user.id)
                             tFollowed.append(user.id)
 
+                        print('Followed :', ScreenName)
+
                     except:
                         pass
-
-                print('Followed :', ScreenNames)
 
             if Author not in tFollowed:
                 if not DryRun:
@@ -192,11 +192,8 @@ for tweet in ContestTweet:
                     try:
                         if not DryRun:
                             retweet = api.retweet(TweetId)
-                            print('Retweeted :', TweetId)
 
-                            #if re.search(RegTag, TweetText):
-                            #    Pidgin = random.choice(tFollowers)
-                            #    api.update_status(Pidgin, retweet.id)
+                        print('Retweeted :', TweetId)
 
                     except:
                         pass
