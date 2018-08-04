@@ -1,10 +1,5 @@
 # Social Pipe. A bot to win lot of useless shits.
 
-
-<p align="center">
-![Logo](https://raw.githubusercontent.com/DvdChe/social-pipe/master/logo.png)
-</p>
-
 ## DISCLAIMER 
 
 Twitter doesn't really like bots, so use this program at your own risks. I recommend you to create a specific account to use it.
