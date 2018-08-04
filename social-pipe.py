@@ -31,7 +31,6 @@ CurrentLocation = str(path.dirname(path.abspath(__file__)))
 
 FlagFile = str('/tmp/social-pipe.flag')
 RetweetedHistoryFile = CurrentLocation+'/retweeted.bin'
-FollowedHistoryFile = CurrentLocation+'/followed.bin'
 FollowerNameFile = CurrentLocation+'/followers.bin'
 AuthConfFile = CurrentLocation+'/social-pipe.conf'
 Log = str('')
@@ -130,30 +129,6 @@ if path.isfile(str(RetweetedHistoryFile)):
 else:
     tRetweeted = []
 
-##############################################################################
-
-# Getting Friendlist
-# ==================
-
-tFollowed = []
-
-if not path.isfile(str(FollowedHistoryFile)):
-
-    print('No friend list file found. Generating... It may take a while')
-
-    friends = tweepy.Cursor(api.friends).items()
-
-    for friend in friends:
-        print('Parsing ', friend.id, ' / ', friend.screen_name)
-        tFollowed.append(friend.id)
-
-    fp = open(str(FollowedHistoryFile), 'wb')
-    pickle.dump(tFollowed, fp)
-    fp.close()
-
-f = open(FollowedHistoryFile, 'rb')
-tFollowed = pickle.load(f)
-
 ###############################################################################
 
 # Parsing the tweet to know what to do.
@@ -186,18 +161,14 @@ for tweet in ContestTweet:
 
                         if not DryRun:
                             api.create_friendship(user.id)
-                            tFollowed.append(user.id)
 
                         print('Followed :', ScreenName)
 
                     except:
                         pass
 
-            if Author not in tFollowed:
-                if not DryRun:
-                    api.create_friendship(Author)
-
-                tFollowed.append(Author)
+            if not DryRun:
+                api.create_friendship(Author)
 
             # If It needs to retweet
             # ======================
@@ -232,10 +203,6 @@ for tweet in ContestTweet:
 
 fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted, fp)
-fp.close()
-
-fp = open(str(FollowedHistoryFile), 'wb')
-pickle.dump(tFollowed, fp)
 fp.close()
 
 StopTime = datetime.datetime.now()
