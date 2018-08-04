@@ -78,8 +78,7 @@ else:
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
-
-api = tweepy.API(auth)
+api = tweepy.API(auth, wait_on_rate_limit=True)
 
 ###############################################################################
 
@@ -97,6 +96,8 @@ if not path.isfile(FollowerNameFile):
 
     for follower in followers:
         UserObj = api.get_user(user_id=follower)
+        # Using screen_name cause it's more easy to parse when it's needed
+        # check if user is already followed
         tFollowers.append('@'+UserObj.screen_name)
 
     fp = open(str(FollowerNameFile), 'wb')
@@ -129,12 +130,29 @@ if path.isfile(str(RetweetedHistoryFile)):
 else:
     tRetweeted = []
 
-if path.isfile(str(FollowedHistoryFile)):
-    f = open(FollowedHistoryFile, 'rb')
-    tFollowed = pickle.load(f)
+##############################################################################
 
-else:
-    tFollowed = []
+# Getting Friendlist
+# ==================
+
+tFollowed = []
+
+if not path.isfile(str(FollowedHistoryFile)):
+
+    print('No friend list file found. Generating... It may take a while')
+
+    friends = tweepy.Cursor(api.friends).items()
+
+    for friend in friends:
+        print('Parsing friend.id / friend.screen_name')
+        tFollowed.append(friend.id)
+
+    fp = open(str(FollowedHistoryFile), 'wb')
+    pickle.dump(tFollowed, fp)
+    fp.close()
+
+f = open(FollowedHistoryFile, 'rb')
+tFollowed = pickle.load(f)
 
 ###############################################################################
 
