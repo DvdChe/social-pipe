@@ -144,7 +144,7 @@ if not path.isfile(str(FollowedHistoryFile)):
     friends = tweepy.Cursor(api.friends).items()
 
     for friend in friends:
-        print('Parsing friend.id / friend.screen_name')
+        print('Parsing ', friend.id, ' / ', friend.screen_name)
         tFollowed.append(friend.id)
 
     fp = open(str(FollowedHistoryFile), 'wb')
