@@ -18,6 +18,9 @@ FetchTweet = <INT>
 # Your own screen name here :
 ScreenName = <YourScreenName>
 
+# Set region where you want to search
+LangSearch = <Contrycode>
+
 
 # Keywords that use to parse tweets :
 # You can specify many word on the same parameter with | separator

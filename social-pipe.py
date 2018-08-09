@@ -64,6 +64,8 @@ DryRunConf = str(conf['OPTIONS']['DryRun'])
 NFetchTweet = int(conf['OPTIONS']['FetchTweet'])
 OwnScreenName = str(conf['OPTIONS']['ScreenName'])
 
+LangSearch =  str(conf['OPTIONS']['LangSearch'])
+
 ContestSearchSTR = str(conf['OPTIONS']['SearchSTR'])
 FollowSTR = str(conf['OPTIONS']['FollowSTR'])
 RetweetSTR = str(conf['OPTIONS']['RetweetSTR'])
@@ -127,7 +129,7 @@ tFollowers = pickle.load(f)
 
 ContestTweet = tweepy.Cursor(
         api.search, q=ContestSearchSTR,
-        lang='fr',
+        lang=LangSearch,
         tweet_mode='extended'
         ).items(NFetchTweet)
 
