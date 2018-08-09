@@ -172,7 +172,8 @@ for tweet in ContestTweet:
 
                         print('Followed :', ScreenName)
 
-                    except:
+                    except tweepy.error.TweepError:
+                        print('Warning : ',user.screen_name, ' may be already followed')
                         pass
 
             if not DryRun:
@@ -192,7 +193,8 @@ for tweet in ContestTweet:
 
                         print('Retweeted :', TweetId)
 
-                    except:
+                    except tweepy.error.TweepError:
+                        print('Warning : Tweet ', TweetId, ' may be already retweeted')
                         pass
 
                     tRetweeted.append(str(TweetId))
@@ -205,7 +207,8 @@ for tweet in ContestTweet:
                         if not DryRun:
                             api.create_favorite(TweetId)
                             print('Favorited : ', TweetId)
-                    except:
+                    except tweepy.error.TweepError:
+                        print('Warning : Tweet ', TweetId, ' may be already in favorite')
                         pass
 
 
