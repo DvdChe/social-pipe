@@ -1,5 +1,7 @@
 # Social Pipe. A bot to win lot of useless shits.
 
+## BIG NEWS : Social-pipe is more customizable with the conf file. Look at the .conf section !
+
 ## DISCLAIMER 
 
 Twitter doesn't really like bots, so use this program at your own risks. I recommend you to create a specific account to use it.
@@ -44,74 +46,65 @@ This program is developped in Python 3.6. I would highly recommand you to use vi
 ```
 Then edit ```social-pipe.conf``` and set your tokens.
 
+```
+[AUTH]
+ConsumerKey = ConsumerKey goes here
+ConsumerSecret = Consumer secret goes here
+AccessToken = AccessToken goes here
+AccessTokenSecret = And Guess what ? This is the access token secret here !
+
+```
+
+Set others options : 
+
+```
+[OPTIONS]
+# Dry run allows you to run the script with no retweet, follow or likes.
+# It allows you to run it to make tests and see if it works correctly.
+# Possible values : True / False.
+DryRun = True
+
+# Amount of tweet parsed in each execution
+FetchTweet = <INT>
+
+# Your own screen name here :
+ScreenName = <YourScreenName>
+
+# Set region where you want to search
+LangSearch = <Contrycode>
+
+```
+
+### Keyword configuration :
+
+Firstly, social-pipe will look for tweet which contains the "contest" keyword. You can specify the word "contest" on your own language
+
+Then, it will look for the keyword "follow", and look for screen names mentionned and finally follow theses names. 
+
+Third, it will lok for the "retweet" keyword and and proceed to the retweet...
+
+Then this is the same thing for quote friend (todo) and favorite tweet.
+
+All of theses keywords can be tuned according your own language. 
+Here is an example for french contests :
+
+```
+LangSearch = fr
+SearchSTR = concours
+FollowSTR = follow
+RetweetSTR = rt|retweet
+QuoteSTR = tag|cite|mention
+FavSTR = fav|like
+```
+
+As you can see, you can specify many words for different use cases.
+
 ### Use it :
 
 Now, you should be ready to play :
 
 ```
    $ python social-pipe.py
-```
-
-By default, the bot will look for posts containing the "concours" word ("contest" in French) and fetch the first 50 words.
-
-It will look if it's needed to follow people to participate, and it will check if the tweet needs to be added in favorite. Finaly, the author of tweet will be followed.
-
-### WHAT IF I'M NOT AN OMELETTE DU FROMAGE ??!
-
-Edit social-pipe.py, look for the following block
-
-```python
-###############################################################################
-
-# Lets search Contest tweet
-# =========================
-
-ContestTweet = tweepy.Cursor(
-        api.search,q='concours',
-        lang='fr',
-        tweet_mode='extended'
-        ).items(NFetchTweet)
-```
-
-And if you're a English mate, 
-
-```python
-###############################################################################
-
-# Lets search Contest tweet
-# =========================
-
-ContestTweet = tweepy.Cursor(
-        api.search,q='contest', # Switched to contest
-        lang='en',              # Switched to en
-        tweet_mode='extended'
-        ).items(NFetchTweet)
-```
-
-As you can see, this program uses Tweepy lib.
-With the search method, you can add more criteria such geolocation. Relevant if you're an US guy or an Australian, for instance.
-
-You will also have to locate theses blocks :
-
-```python
-
-# Let's find if there is suckers to follow:
-# =========================================
-
-if re.search('follow',TweetText,re.IGNORECASE):
-    ScreenNames = re.findall(r'[@]\w+',TweetText)
-
-
-#[...]
-
-# If it needs to be liked
-# =======================
-
-# Replace the "fav" word by the terme which means add to favorite or like in your own language
-if re.search('fav',TweetText,re.IGNORECASE):
-
-#[...]
-
 ```
 
 Of Course, if you have more stuff to tune, you can open an issue or try to do it by yourself =)
