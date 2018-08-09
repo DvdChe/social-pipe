@@ -18,7 +18,6 @@ import configparser
 import re
 import pickle
 import datetime
-import random
 
 from os import path, remove
 
@@ -64,13 +63,13 @@ DryRunConf = str(conf['OPTIONS']['DryRun'])
 NFetchTweet = int(conf['OPTIONS']['FetchTweet'])
 OwnScreenName = str(conf['OPTIONS']['ScreenName'])
 
-LangSearch =  str(conf['OPTIONS']['LangSearch'])
+LangSearch = str(conf['OPTIONS']['LangSearch'])
 
 ContestSearchSTR = str(conf['OPTIONS']['SearchSTR'])
 FollowSTR = str(conf['OPTIONS']['FollowSTR'])
 RetweetSTR = str(conf['OPTIONS']['RetweetSTR'])
 QuoteSTR = str(conf['OPTIONS']['QuoteSTR'])
-FavSTR =  str(conf['OPTIONS']['FavSTR'])
+FavSTR = str(conf['OPTIONS']['FavSTR'])
 
 if DryRunConf == 'True':
     DryRun = True
@@ -84,7 +83,7 @@ else:
 # Connect to Twitter:
 # ===================
 
-try :
+try:
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth, wait_on_rate_limit=True)
@@ -153,62 +152,64 @@ else:
 try:
 
     for tweet in ContestTweet:
-    
+
         # If it's a retweet :
         # ===================
-    
+
         if hasattr(tweet, 'retweeted_status'):
-    
+
             TweetText = tweet.retweeted_status.full_text
             TweetId = tweet.retweeted_status.id
             Author = tweet.retweeted_status.user.id_str
             AuthorScrenName = tweet.retweeted_status.user.id_str
-    
+
             if str(TweetId) not in tRetweeted:
-    
+
                 # Let's find if there is suckers to follow:
                 # =========================================
-    
+
                 if re.search(FollowSTR, TweetText, re.IGNORECASE):
                     ScreenNames = re.findall(r'[@]\w+', TweetText)
-    
+
                     for ScreenName in ScreenNames:
-    
+
                         try:
                             user = api.get_user(screen_name=ScreenName)
-    
+
                             if not DryRun:
                                 api.create_friendship(user.id)
-    
+
                             print('Followed :', ScreenName)
-    
+
                         except tweepy.error.TweepError:
-                            print('Warning : ',user.screen_name, ' may be already followed')
+                            print('Warning : ', user.screen_name,
+                                  'may be already followed')
                             pass
-    
+
                 if not DryRun:
                     api.create_friendship(Author)
-    
+
                 # If It needs to retweet
                 # ======================
                 if TweetId not in tRetweeted:
-    
+
                     RegTweet = re.compile(RetweetSTR, re.IGNORECASE)
                     RegTag = re.compile(QuoteSTR, re.IGNORECASE)
-    
+
                     if re.search(RegTweet, TweetText):
                         try:
                             if not DryRun:
                                 retweet = api.retweet(TweetId)
-    
+
                             print('Retweeted :', TweetId)
-    
+
                         except tweepy.error.TweepError:
-                            print('Warning : Tweet ', TweetId, ' may be already retweeted')
+                            print('Warning : Tweet ', TweetId,
+                                  ' may be already retweeted')
                             pass
-    
+
                         tRetweeted.append(str(TweetId))
-    
+
                     # If it needs to be liked
                     # =======================
                     RegFav = re.compile(FavSTR, re.IGNORECASE)
@@ -218,7 +219,8 @@ try:
                                 api.create_favorite(TweetId)
                                 print('Favorited : ', TweetId)
                         except tweepy.error.TweepError:
-                            print('Warning : Tweet ', TweetId, ' may be already in favorite')
+                            print('Warning : Tweet ', TweetId,
+                                  ' may be already in favorite')
                             pass
 
 except tweepy.error.TweepError:
