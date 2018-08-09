@@ -12,11 +12,19 @@ AccessTokenSecret = And Guess what ? This is the access token secret here !
 # Possible values : True / False.
 DryRun = True
 
+# Amount of tweet parsed in each execution
+FetchTweet = <INT>
 
-# Determine how many tweets will be analysed in the research
-FetchTweet = 5
-SearchSTR = concours
-FollowSTR = follow
-RetweetSTR = rt|retweet
-QuoteSTR = tag|cite|mention
-FavSTR = fav|like
+# Your own screen name here :
+ScreenName = <YourScreenName>
+
+
+# Keywords that use to parse tweets :
+# You can specify many word on the same parameter with | separator
+# E/G : plip|plop|plup 
+
+SearchSTR = 'Keyword for contest'
+FollowSTR = 'Keyword for follow'
+RetweetSTR = 'Keyword for retweet'
+QuoteSTR = 'Keyword for quote'
+FavSTR = 'Keyword for favorite'
