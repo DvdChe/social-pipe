@@ -126,11 +126,19 @@ tFollowers = pickle.load(f)
 # Lets search Contest tweet
 # =========================
 
-ContestTweet = tweepy.Cursor(
-        api.search, q=ContestSearchSTR,
-        lang=LangSearch,
-        tweet_mode='extended'
-        ).items(NFetchTweet)
+
+def SearchTweet(Keyword, lang, NumFetch):
+
+    out = tweepy.Cursor(
+            api.search, q=Keyword,
+            lang=lang,
+            tweet_mode='extended'
+            ).items(NumFetch)
+    return out
+
+
+ContestTweet = SearchTweet(ContestSearchSTR, LangSearch, NFetchTweet)
+
 
 ##############################################################################
 
