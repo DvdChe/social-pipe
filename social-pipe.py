@@ -22,6 +22,7 @@ import random
 
 from os import path, remove
 
+
 ###############################################################################
 
 # General config
@@ -38,14 +39,14 @@ Log = str('')
 # Avoiding multiple executions
 # ============================
 
-#if path.isfile(FlagFile):
-#    print("Error : ", FlagFile, "exists. Is Social pip is already running ?")
-#    exit(1)
+if path.isfile(FlagFile):
+    print("Error : ", FlagFile, "exists. Is Social pip is already running ?")
+    exit(1)
 
 StartTime = datetime.datetime.now()
 print('============ Starting Social-Pipe @', StartTime, ' ============')
 
-#open(FlagFile, 'a')
+open(FlagFile, 'a')
 
 ###############################################################################
 
@@ -75,9 +76,16 @@ else:
 # Connect to Twitter:
 # ===================
 
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth, wait_on_rate_limit=True)
+try :
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth, wait_on_rate_limit=True)
+
+except tweepy.TweepError as e:
+    print(e)
+    remove(FlagFile)
+    exit(e.message[0]['code'])
+
 
 ###############################################################################
 
