@@ -150,75 +150,80 @@ else:
 # Parsing the tweet to know what to do.
 # ====================================
 
-for tweet in ContestTweet:
+try:
 
-    # If it's a retweet :
-    # ===================
+    for tweet in ContestTweet:
+    
+        # If it's a retweet :
+        # ===================
+    
+        if hasattr(tweet, 'retweeted_status'):
+    
+            TweetText = tweet.retweeted_status.full_text
+            TweetId = tweet.retweeted_status.id
+            Author = tweet.retweeted_status.user.id_str
+            AuthorScrenName = tweet.retweeted_status.user.id_str
+    
+            if str(TweetId) not in tRetweeted:
+    
+                # Let's find if there is suckers to follow:
+                # =========================================
+    
+                if re.search(FollowSTR, TweetText, re.IGNORECASE):
+                    ScreenNames = re.findall(r'[@]\w+', TweetText)
+    
+                    for ScreenName in ScreenNames:
+    
+                        try:
+                            user = api.get_user(screen_name=ScreenName)
+    
+                            if not DryRun:
+                                api.create_friendship(user.id)
+    
+                            print('Followed :', ScreenName)
+    
+                        except tweepy.error.TweepError:
+                            print('Warning : ',user.screen_name, ' may be already followed')
+                            pass
+    
+                if not DryRun:
+                    api.create_friendship(Author)
+    
+                # If It needs to retweet
+                # ======================
+                if TweetId not in tRetweeted:
+    
+                    RegTweet = re.compile(RetweetSTR, re.IGNORECASE)
+                    RegTag = re.compile(QuoteSTR, re.IGNORECASE)
+    
+                    if re.search(RegTweet, TweetText):
+                        try:
+                            if not DryRun:
+                                retweet = api.retweet(TweetId)
+    
+                            print('Retweeted :', TweetId)
+    
+                        except tweepy.error.TweepError:
+                            print('Warning : Tweet ', TweetId, ' may be already retweeted')
+                            pass
+    
+                        tRetweeted.append(str(TweetId))
+    
+                    # If it needs to be liked
+                    # =======================
+                    RegFav = re.compile(FavSTR, re.IGNORECASE)
+                    if re.search(RegFav, TweetText):
+                        try:
+                            if not DryRun:
+                                api.create_favorite(TweetId)
+                                print('Favorited : ', TweetId)
+                        except tweepy.error.TweepError:
+                            print('Warning : Tweet ', TweetId, ' may be already in favorite')
+                            pass
 
-    if hasattr(tweet, 'retweeted_status'):
-
-        TweetText = tweet.retweeted_status.full_text
-        TweetId = tweet.retweeted_status.id
-        Author = tweet.retweeted_status.user.id_str
-        AuthorScrenName = tweet.retweeted_status.user.id_str
-
-        if str(TweetId) not in tRetweeted:
-
-            # Let's find if there is suckers to follow:
-            # =========================================
-
-            if re.search(FollowSTR, TweetText, re.IGNORECASE):
-                ScreenNames = re.findall(r'[@]\w+', TweetText)
-
-                for ScreenName in ScreenNames:
-
-                    try:
-                        user = api.get_user(screen_name=ScreenName)
-
-                        if not DryRun:
-                            api.create_friendship(user.id)
-
-                        print('Followed :', ScreenName)
-
-                    except tweepy.error.TweepError:
-                        print('Warning : ',user.screen_name, ' may be already followed')
-                        pass
-
-            if not DryRun:
-                api.create_friendship(Author)
-
-            # If It needs to retweet
-            # ======================
-            if TweetId not in tRetweeted:
-
-                RegTweet = re.compile(RetweetSTR, re.IGNORECASE)
-                RegTag = re.compile(QuoteSTR, re.IGNORECASE)
-
-                if re.search(RegTweet, TweetText):
-                    try:
-                        if not DryRun:
-                            retweet = api.retweet(TweetId)
-
-                        print('Retweeted :', TweetId)
-
-                    except tweepy.error.TweepError:
-                        print('Warning : Tweet ', TweetId, ' may be already retweeted')
-                        pass
-
-                    tRetweeted.append(str(TweetId))
-
-                # If it needs to be liked
-                # =======================
-                RegFav = re.compile(FavSTR, re.IGNORECASE)
-                if re.search(RegFav, TweetText):
-                    try:
-                        if not DryRun:
-                            api.create_favorite(TweetId)
-                            print('Favorited : ', TweetId)
-                    except tweepy.error.TweepError:
-                        print('Warning : Tweet ', TweetId, ' may be already in favorite')
-                        pass
-
+except tweepy.error.TweepError:
+    print('Unexpected error')
+    pass
 
 fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted, fp)
