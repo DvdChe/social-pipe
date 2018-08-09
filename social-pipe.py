@@ -38,14 +38,14 @@ Log = str('')
 # Avoiding multiple executions
 # ============================
 
-if path.isfile(FlagFile):
-    print("Error : ", FlagFile, "exists. Is Social pip is already running ?")
-    exit(1)
+#if path.isfile(FlagFile):
+#    print("Error : ", FlagFile, "exists. Is Social pip is already running ?")
+#    exit(1)
 
 StartTime = datetime.datetime.now()
 print('============ Starting Social-Pipe @', StartTime, ' ============')
 
-open(FlagFile, 'a')
+#open(FlagFile, 'a')
 
 ###############################################################################
 
