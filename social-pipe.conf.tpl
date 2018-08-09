@@ -1,8 +1,8 @@
 # Don't forget to rename this file to social-pipe.conf
 
 [AUTH]
-ConsumerKey = ConsumerKey goes here 
-ConsumerSecret = Consumer secret goes here 
+ConsumerKey = ConsumerKey goes here
+ConsumerSecret = Consumer secret goes here
 AccessToken = AccessToken goes here
 AccessTokenSecret = And Guess what ? This is the access token secret here !
 
@@ -15,5 +15,8 @@ DryRun = True
 
 # Determine how many tweets will be analysed in the research
 FetchTweet = 5
-
-
+SearchSTR = concours
+FollowSTR = follow
+RetweetSTR = rt|retweet
+QuoteSTR = tag|cite|mention
+FavSTR = fav|like

@@ -64,6 +64,12 @@ DryRunConf = str(conf['OPTIONS']['DryRun'])
 NFetchTweet = int(conf['OPTIONS']['FetchTweet'])
 OwnScreenName = str(conf['OPTIONS']['ScreenName'])
 
+ContestSearchSTR = str(conf['OPTIONS']['SearchSTR'])
+FollowSTR = str(conf['OPTIONS']['FollowSTR'])
+RetweetSTR = str(conf['OPTIONS']['RetweetSTR'])
+QuoteSTR = str(conf['OPTIONS']['QuoteSTR'])
+FavSTR =  str(conf['OPTIONS']['FavSTR'])
+
 if DryRunConf == 'True':
     DryRun = True
     print('This is a dry run. Nothing will happens.')
@@ -120,7 +126,7 @@ tFollowers = pickle.load(f)
 # =========================
 
 ContestTweet = tweepy.Cursor(
-        api.search, q='concours',
+        api.search, q=ContestSearchSTR,
         lang='fr',
         tweet_mode='extended'
         ).items(NFetchTweet)
@@ -159,7 +165,7 @@ for tweet in ContestTweet:
             # Let's find if there is suckers to follow:
             # =========================================
 
-            if re.search('follow', TweetText, re.IGNORECASE):
+            if re.search(FollowSTR, TweetText, re.IGNORECASE):
                 ScreenNames = re.findall(r'[@]\w+', TweetText)
 
                 for ScreenName in ScreenNames:
@@ -183,8 +189,8 @@ for tweet in ContestTweet:
             # ======================
             if TweetId not in tRetweeted:
 
-                RegTweet = re.compile('rt|retweet', re.IGNORECASE)
-                RegTag = re.compile('tag|cite|mention', re.IGNORECASE)
+                RegTweet = re.compile(RetweetSTR, re.IGNORECASE)
+                RegTag = re.compile(QuoteSTR, re.IGNORECASE)
 
                 if re.search(RegTweet, TweetText):
                     try:
@@ -201,7 +207,7 @@ for tweet in ContestTweet:
 
                 # If it needs to be liked
                 # =======================
-                RegFav = re.compile('fav|like', re.IGNORECASE)
+                RegFav = re.compile(FavSTR, re.IGNORECASE)
                 if re.search(RegFav, TweetText):
                     try:
                         if not DryRun:
