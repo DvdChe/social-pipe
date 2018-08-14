@@ -63,7 +63,7 @@ if path.isfile(FlagFile):
     exit(1)
 
 StartTime = datetime.datetime.now()
-logging.info('============ Starting Social-Pipe @', StartTime, ' ============')
+logging.info('============ Starting Social-Pipe ============')
 
 open(FlagFile, 'a')
 
