@@ -116,7 +116,7 @@ except tweepy.TweepError as e:
 
 ###############################################################################
 
-# Get list of follewers :
+# Get list of followers :
 # ======================
 
 tFollowers = []
