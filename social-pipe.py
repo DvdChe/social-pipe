@@ -63,7 +63,7 @@ if path.isfile(FlagFile):
     exit(1)
 
 StartTime = datetime.datetime.now()
-logging.info('============ Starting Social-Pipe ============')
+logging.info('============ Starting Social-Pipe @%s ============', StartTime)
 
 open(FlagFile, 'a')
 
@@ -230,11 +230,12 @@ try:
                             if not DryRun:
                                 retweet = api.retweet(TweetId)
 
-                            logging.info('Retweeted :',string(TweetId))
+                            logging.info('Retweeted : %s',TweetId)
 
                         except tweepy.error.TweepError:
-                            logging.info('Warning : Tweet ', string(TweetId),
-                                  ' may be already retweeted')
+                            logging.info('Warning : Tweet  %s may already RT',
+                                          TweetId,
+                                  )
                             pass
 
                         tRetweeted.append(str(TweetId))
@@ -246,10 +247,10 @@ try:
                         try:
                             if not DryRun:
                                 api.create_favorite(TweetId)
-                                logging.info('Favorited : ', string(TweetId))
+                                logging.info('Favorited : %s', TweetId)
                         except tweepy.error.TweepError:
-                            logging.info('Warning : Tweet ', string(TweetId),
-                                         ' may be already in favorite')
+                            logging.info('Warning : Tweet  %s already
+                                          in favorite', TweetId)
                             pass
 
 except tweepy.error.TweepError:
@@ -262,6 +263,6 @@ fp.close()
 
 StopTime = string(datetime.datetime.now())
 
-logging.info('============ Social-Pipe Stopped @ ', StopTime, ' ============')
+logging.info('============ Social-Pipe Stopped @ %s ============', StopTime)
 
 remove(FlagFile)
