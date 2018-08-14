@@ -205,14 +205,13 @@ try:
                             user = api.get_user(screen_name=ScreenName)
 
                         except tweepy.error.TweepError:
-                            logging.warning(user.screen_name,
-                                            'may be already followed')
+                            logging.warning('%s may be already followed', user.screen_name)
                             pass
 
                         else:
                             if not DryRun:
                                 api.create_friendship(user.id)
-                                logging.info('Followed :', ScreenName)
+                                logging.info('Followed :%s ', ScreenName)
 
 
                 if not DryRun:
