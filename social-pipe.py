@@ -230,10 +230,10 @@ try:
                             if not DryRun:
                                 retweet = api.retweet(TweetId)
 
-                            logging.info('Retweeted :', TweetId)
+                            logging.info('Retweeted :',string(TweetId))
 
                         except tweepy.error.TweepError:
-                            logging.info('Warning : Tweet ', TweetId,
+                            logging.info('Warning : Tweet ', string(TweetId),
                                   ' may be already retweeted')
                             pass
 
@@ -246,9 +246,9 @@ try:
                         try:
                             if not DryRun:
                                 api.create_favorite(TweetId)
-                                logging.info('Favorited : ', TweetId)
+                                logging.info('Favorited : ', string(TweetId))
                         except tweepy.error.TweepError:
-                            logging.info('Warning : Tweet ', TweetId,
+                            logging.info('Warning : Tweet ', string(TweetId),
                                          ' may be already in favorite')
                             pass
 
@@ -260,7 +260,7 @@ fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted, fp)
 fp.close()
 
-StopTime = datetime.datetime.now()
+StopTime = string(datetime.datetime.now())
 
 logging.info('============ Social-Pipe Stopped @ ', StopTime, ' ============')
 
