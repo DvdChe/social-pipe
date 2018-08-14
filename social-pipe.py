@@ -40,7 +40,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
+stream_handler.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 
 
