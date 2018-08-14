@@ -59,7 +59,7 @@ Log = str('')
 # ============================
 
 if path.isfile(FlagFile):
-    logging.error("Error : ", FlagFile, "exists. Is Social pip is already running ?")
+    logging.error("FlagFile exists. Is Social pipe is already running ?")
     exit(1)
 
 StartTime = datetime.datetime.now()
