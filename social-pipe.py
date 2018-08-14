@@ -257,7 +257,7 @@ fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted, fp)
 fp.close()
 
-StopTime = string(datetime.datetime.now())
+StopTime = datetime.datetime.now()
 
 logging.info('============ Social-Pipe Stopped @ %s ============', StopTime)
 
