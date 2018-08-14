@@ -233,9 +233,7 @@ try:
                             logging.info('Retweeted : %s',TweetId)
 
                         except tweepy.error.TweepError:
-                            logging.info('Warning : Tweet  %s may already RT',
-                                          TweetId,
-                                  )
+                            logging.info('Warning : Tweet  %s may already RT',TweetId )
                             pass
 
                         tRetweeted.append(str(TweetId))
@@ -249,8 +247,7 @@ try:
                                 api.create_favorite(TweetId)
                                 logging.info('Favorited : %s', TweetId)
                         except tweepy.error.TweepError:
-                            logging.info('Warning : Tweet  %s already
-                                          in favorite', TweetId)
+                            logging.info('Warning : Tweet  %s already in fav', TweetId )
                             pass
 
 except tweepy.error.TweepError:
