@@ -18,11 +18,31 @@ import configparser
 import re
 import pickle
 import datetime
+import logging
 
+from logging.handlers import RotatingFileHandler
 from os import path, remove
 
 
 ###############################################################################
+
+# Logging configuration
+# =====================
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(ascitime)s :: %(levelname)s :: %(message)s')
+
+file_handler = RottatingFileHandler('social-pipe.log', a, 1000000, 1)
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+
 
 # General config
 # ==============
@@ -39,11 +59,11 @@ Log = str('')
 # ============================
 
 if path.isfile(FlagFile):
-    print("Error : ", FlagFile, "exists. Is Social pip is already running ?")
+    logging.error("Error : ", FlagFile, "exists. Is Social pip is already running ?")
     exit(1)
 
 StartTime = datetime.datetime.now()
-print('============ Starting Social-Pipe @', StartTime, ' ============')
+logging.info('============ Starting Social-Pipe @', StartTime, ' ============')
 
 open(FlagFile, 'a')
 
@@ -73,7 +93,7 @@ FavSTR = str(conf['OPTIONS']['FavSTR'])
 
 if DryRunConf == 'True':
     DryRun = True
-    print('This is a dry run. Nothing will happens.')
+    logging.info('This is a dry run. Nothing will happens.')
 
 else:
     DryRun = False
@@ -89,7 +109,7 @@ try:
     api = tweepy.API(auth, wait_on_rate_limit=True)
 
 except tweepy.TweepError as e:
-    print(e)
+    logging.error(e)
     remove(FlagFile)
     exit(e.message[0]['code'])
 
@@ -103,7 +123,7 @@ tFollowers = []
 
 if not path.isfile(FollowerNameFile):
 
-    print('No followers list file found. Generating... It may take a while')
+    logging.info('No followers list file found. Generating... It may take a while')
 
     followers = tweepy.Cursor(api.followers_ids,
                               screen_name=OwnScreenName).items()
@@ -183,16 +203,16 @@ try:
 
                         try:
                             user = api.get_user(screen_name=ScreenName)
-                        
+
                         except tweepy.error.TweepError:
-                            print('Warning : ', user.screen_name,
-                                  'may be already followed')
+                            logging.warning(user.screen_name,
+                                            'may be already followed')
                             pass
 
                         else:
                             if not DryRun:
                                 api.create_friendship(user.id)
-                                print('Followed :', ScreenName)
+                                logging.info('Followed :', ScreenName)
 
 
                 if not DryRun:
@@ -210,10 +230,10 @@ try:
                             if not DryRun:
                                 retweet = api.retweet(TweetId)
 
-                            print('Retweeted :', TweetId)
+                            logging.info('Retweeted :', TweetId)
 
                         except tweepy.error.TweepError:
-                            print('Warning : Tweet ', TweetId,
+                            logging.info('Warning : Tweet ', TweetId,
                                   ' may be already retweeted')
                             pass
 
@@ -226,14 +246,14 @@ try:
                         try:
                             if not DryRun:
                                 api.create_favorite(TweetId)
-                                print('Favorited : ', TweetId)
+                                logging.info('Favorited : ', TweetId)
                         except tweepy.error.TweepError:
-                            print('Warning : Tweet ', TweetId,
-                                  ' may be already in favorite')
+                            logging.info('Warning : Tweet ', TweetId,
+                                         ' may be already in favorite')
                             pass
 
 except tweepy.error.TweepError:
-    print('Unexpected error')
+    logging.error('Unexpected error')
     pass
 
 fp = open(str(RetweetedHistoryFile), 'wb')
@@ -242,6 +262,6 @@ fp.close()
 
 StopTime = datetime.datetime.now()
 
-print('============ Social-Pipe Stopped @ ', StopTime, ' ============')
+logging.info('============ Social-Pipe Stopped @ ', StopTime, ' ============')
 
 remove(FlagFile)
