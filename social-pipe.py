@@ -32,7 +32,7 @@ from os import path, remove
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
-formatter = logging.Formatter('%(ascitime)s :: %(levelname)s :: %(message)s')
+formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
 
 file_handler = RotatingFileHandler('social-pipe.log', 'a', 1000000, 1)
 file_handler.setLevel(logging.DEBUG)
