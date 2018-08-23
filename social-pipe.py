@@ -207,6 +207,9 @@ try:
                         except tweepy.error.TweepError:
                             logging.warning('%s may be already followed', user.screen_name)
                             pass
+                        except:
+                            logging.error('Unknown error')
+                            pass
 
                         else:
                             if not DryRun:
@@ -234,7 +237,10 @@ try:
                         except tweepy.error.TweepError:
                             logging.info('Warning : Tweet  %s may already RT',TweetId )
                             pass
-
+                        except:
+                            logging.error('Unknown error')
+                            pass
+                        
                         tRetweeted.append(str(TweetId))
 
                     # If it needs to be liked
@@ -247,6 +253,9 @@ try:
                                 logging.info('Favorited : %s', TweetId)
                         except tweepy.error.TweepError:
                             logging.info('Warning : Tweet  %s already in fav', TweetId )
+                            pass
+                        except:
+                            logging.error('Unknown error')
                             pass
 
 except tweepy.error.TweepError:
