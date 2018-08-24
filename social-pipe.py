@@ -23,26 +23,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from os import path, remove
 
-
 ###############################################################################
-
-# Logging configuration
-# =====================
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
-
-file_handler = RotatingFileHandler('social-pipe.log', 'a', 1000000, 1)
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
-logger.addHandler(file_handler)
-
 
 # General config
 # ==============
@@ -54,18 +35,6 @@ RetweetedHistoryFile = CurrentLocation+'/retweeted.bin'
 FollowerNameFile = CurrentLocation+'/followers.bin'
 AuthConfFile = CurrentLocation+'/social-pipe.conf'
 Log = str('')
-
-# Avoiding multiple executions
-# ============================
-
-if path.isfile(FlagFile):
-    logging.error("FlagFile exists. Is Social pipe is already running ?")
-    exit(1)
-
-StartTime = datetime.datetime.now()
-logging.info('============ Starting Social-Pipe @%s ============', StartTime)
-
-open(FlagFile, 'a')
 
 ###############################################################################
 
@@ -91,12 +60,49 @@ RetweetSTR = str(conf['OPTIONS']['RetweetSTR'])
 QuoteSTR = str(conf['OPTIONS']['QuoteSTR'])
 FavSTR = str(conf['OPTIONS']['FavSTR'])
 
+LogLevel = int(conf['OPTIONS']['LogLevel'])
+
 if DryRunConf == 'True':
     DryRun = True
     logging.info('This is a dry run. Nothing will happens.')
 
 else:
     DryRun = False
+
+###############################################################################
+
+# Logging configuration
+# =====================
+
+logger = logging.getLogger()
+logger.setLevel(LogLevel)
+
+formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
+
+file_handler = RotatingFileHandler('social-pipe.log', 'a', 1000000, 1)
+file_handler.setLevel(LogLevel)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(LogLevel)
+logger.addHandler(file_handler)
+
+###############################################################################
+
+
+# Avoiding multiple executions
+# ============================
+
+if path.isfile(FlagFile):
+    logging.error("FlagFile exists. Is Social pipe is already running ?")
+    exit(1)
+
+StartTime = datetime.datetime.now()
+logging.info('============ Starting Social-Pipe @%s ============', StartTime)
+
+open(FlagFile, 'a')
+
 
 ###############################################################################
 
