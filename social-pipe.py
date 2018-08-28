@@ -94,14 +94,14 @@ logger.addHandler(file_handler)
 # Avoiding multiple executions
 # ============================
 
-if path.isfile(FlagFile):
-    logging.error("FlagFile exists. Is Social pipe is already running ?")
-    exit(1)
-
-StartTime = datetime.datetime.now()
-logging.info('============ Starting Social-Pipe @%s ============', StartTime)
-
-open(FlagFile, 'a')
+#if path.isfile(FlagFile):
+#    logging.error("FlagFile exists. Is Social pipe is already running ?")
+#    exit(1)
+#
+#StartTime = datetime.datetime.now()
+#logging.info('============ Starting Social-Pipe @%s ============', StartTime)
+#
+#open(FlagFile, 'a')
 
 
 ###############################################################################
@@ -116,7 +116,7 @@ try:
 
 except tweepy.TweepError as e:
     logging.error(e)
-    remove(FlagFile)
+    #remove(FlagFile)
     exit(e.message[0]['code'])
 
 
@@ -276,4 +276,4 @@ StopTime = datetime.datetime.now()
 
 logging.info('============ Social-Pipe Stopped @ %s ============', StopTime)
 
-remove(FlagFile)
+#remove(FlagFile)
