@@ -264,8 +264,8 @@ try:
                             logging.error('Unknown error')
                             pass
 
-except tweepy.error.TweepError:
-    logging.error('Unexpected error')
+except tweepy.error.TweepError as e:
+    logging.error('%s',e)
     pass
 
 fp = open(str(RetweetedHistoryFile), 'wb')
