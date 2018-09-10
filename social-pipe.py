@@ -219,8 +219,8 @@ try:
 
                         else:
                             if not DryRun:
+                                logging.info('Create friendship of : %s ', ScreenName)
                                 api.create_friendship(user.id)
-                                logging.info('Followed : %s ', ScreenName)
 
 
                 if not DryRun:
