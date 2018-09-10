@@ -265,7 +265,7 @@ try:
                             pass
 
 except tweepy.error.TweepError as e:
-    logging.error('%s',e[0])
+    logging.error('%s',e)
     pass
 
 fp = open(str(RetweetedHistoryFile), 'wb')
