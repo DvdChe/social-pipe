@@ -33,7 +33,6 @@ FlagFile = str('/tmp/social-pipe.flag')
 RetweetedHistoryFile = CurrentLocation+'/retweeted.bin'
 FollowerNameFile = CurrentLocation+'/followers.bin'
 AuthConfFile = CurrentLocation+'/social-pipe.conf'
-Log = str('')
 
 ###############################################################################
 
@@ -78,14 +77,16 @@ logger.setLevel(LogLevel)
 
 formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
 
-file_handler = RotatingFileHandler('social-pipe.log', 'a', 1000000, 1)
+# set log into file .log
+file_handler = RotatingFileHandler(CurrentLocation+'/social-pipe.log', 'a', 1000000, 1)
 file_handler.setLevel(LogLevel)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
+# set log into output std
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(LogLevel)
-logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
 
 ###############################################################################
 
@@ -271,6 +272,6 @@ fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted, fp)
 fp.close()
 
-logging.info('============ Social-Pipe Stopped @ %s ============')
+logging.info('============ Social-Pipe Stopped ============')
 
 #remove(FlagFile)
