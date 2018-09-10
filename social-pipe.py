@@ -17,11 +17,10 @@ import tweepy
 import configparser
 import re
 import pickle
-import datetime
 import logging
 
 from logging.handlers import RotatingFileHandler
-from os import path, remove
+from os import path
 
 ###############################################################################
 
@@ -98,9 +97,9 @@ logger.addHandler(file_handler)
 #    logging.error("FlagFile exists. Is Social pipe is already running ?")
 #    exit(1)
 #
-#StartTime = datetime.datetime.now()
-#logging.info('============ Starting Social-Pipe @%s ============', StartTime)
-#
+
+logging.info('============ Starting Social-Pipe  ============')
+
 #open(FlagFile, 'a')
 
 
@@ -272,8 +271,6 @@ fp = open(str(RetweetedHistoryFile), 'wb')
 pickle.dump(tRetweeted, fp)
 fp.close()
 
-StopTime = datetime.datetime.now()
-
-logging.info('============ Social-Pipe Stopped @ %s ============', StopTime)
+logging.info('============ Social-Pipe Stopped @ %s ============')
 
 #remove(FlagFile)
