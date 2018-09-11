@@ -6,3 +6,4 @@ bin/
 lib/
 pip-selfcheck.json
 *.log
+*.log.*
