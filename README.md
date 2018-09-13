@@ -1,4 +1,4 @@
-# Social Pipe. A bot to win lot of useless shits.
+# Social Pipe. A bot to win a lot of useless shits.
 
 ## BIG UPDATE 
 Social-pipe is more customizable with the conf file. Look at the .conf section !
