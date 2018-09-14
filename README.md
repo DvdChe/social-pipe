@@ -35,7 +35,7 @@ This program is developped in Python 3.6. I would highly recommand you to use vi
    $ cd social-pipe
    $ python3 -m virtualenv .
    $ source bin/activate
-   $ pip -r install requirements.txt
+   $ pip install -r requirements.txt
 
 ```
 
