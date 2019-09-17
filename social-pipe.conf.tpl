@@ -13,21 +13,33 @@ AccessTokenSecret = And Guess what ? This is the access token secret here !
 DryRun = True
 
 # Amount of tweet parsed in each execution
-FetchTweet = <INT>
+FetchTweet = 20
 
 # Your own screen name here :
 ScreenName = <YourScreenName>
 
 # Set region where you want to search
-LangSearch = <Contrycode>
+LangSearch = fr
 
 
 # Keywords that use to parse tweets :
 # You can specify many word on the same parameter with | separator
 # E/G : plip|plop|plup 
 
-SearchSTR = 'Keyword for contest'
-FollowSTR = 'Keyword for follow'
-RetweetSTR = 'Keyword for retweet'
-QuoteSTR = 'Keyword for quote'
-FavSTR = 'Keyword for favorite'
+# Keyword for contest
+SearchSTR = concours
+
+FollowSTR = 'follow|suivre|suis|suivez'
+
+RetweetSTR = 'rt|retweet'
+QuoteSTR = 'tag|taggez|cite|mentionne|mention'
+FavSTR = 'like|fav'
+
+# Logger levels:
+# 10 DEBUG ( Most verbose )
+# 20 INFO
+# 30 WARNING
+# 40 ERROR
+
+LogLevel = 40
+
